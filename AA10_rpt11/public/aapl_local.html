@@ -1,0 +1,91 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<!-- Plotly.js -->
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+	<h1>MongoDB database visualization by AA10</h1>
+	<hr>
+	<h2>Time series : Multi sensor data</h2>
+
+	<!-- Plotly chart will be drawn inside this DIV -->
+	<div id="myDiv" style="width: 700px;height: 500px"></div>
+	
+	<script>
+		<!-- JAVASCRIPT CODE GOES HERE -->
+
+		Plotly.d3.csv("data/AA10_s1000.csv", function(err, rows){
+
+			function unpack(rows, key) {
+				return rows.map(function(row) { return row[key]; });
+			}
+
+
+			var trace1 = {
+				type: "scatter",
+				mode: "lines",
+				name: 'Temperature',
+				x: unpack(rows, 'date'),
+				y: unpack(rows, 'temperature'),
+				line: {color: '#17BECF'}
+			}
+
+			var trace2 = {
+				type: "scatter",
+				mode: "lines",
+				name: 'Humidity',
+				x: unpack(rows, 'date'),
+				y: unpack(rows, 'humidity'),
+				line: {color: '#7F7F7F'}
+			}
+			var trace3 = {
+				type: "scatter",
+				mode: "lines",
+				name: 'Luminosity',
+				x: unpack(rows, 'date'),
+				y: unpack(rows, 'luminosity'),
+				line: {color: '#34fc12'}
+			}
+
+			var data = [trace1,trace2,trace3];
+
+			var layout = {
+				title: 'AAPL Price Time Series with rangeslider',
+				xaxis: {
+					autorange: true,
+					range: ['2019-11-27  4:19:12 PM', '2019-11-27  4:57:07 PM'],
+					rangeselector: {buttons: [
+						{
+							count: 10,
+							label: '1sec',
+							step: 'second',
+							stepmode: 'backward'
+						},
+						{
+							count: 30,
+							label: '30 sec',
+							step: 'second',
+							stepmode: 'backward'
+						},
+						{step: 'all'}
+						]},
+						rangeslider: {range: ['2019-11-27  4:19:12 PM', '2019-11-27  4:57:07 PM']},
+						type: 'date'
+					},
+					yaxis: {
+						autorange: true,
+						range: [0,500],
+						type: 'linear'
+					}
+				};
+
+
+				Plotly.newPlot('myDiv', data, layout);
+			})		
+
+		</script>
+
+	</body>
+</html>	
+
